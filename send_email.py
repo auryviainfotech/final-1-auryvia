@@ -21,6 +21,7 @@ SMTP_PORT = int(os.getenv('SMTP_PORT', '587'))
 EMAIL_USER = os.getenv('EMAIL_USER', '')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD', '')
 ADMIN_EMAIL = 'auryvia.infotech@gmail.com'
+WEBSITE_URL = 'https://auryviainfotech.com'
 
 def send_email(to_email, subject, html_content, text_content=None):
     """Send email using SMTP"""
@@ -87,6 +88,7 @@ def send_user_message_to_admin(user_name, user_email, message):
                 <p style="margin: 0; font-size: 16px; line-height: 1.6;">{message}</p>
             </div>
             <p style="color: #666; font-size: 14px;">Reply to this user through the admin panel when you're online.</p>
+            <p style="margin-top: 15px;"><a href="{WEBSITE_URL}" style="color: #5865f2; font-weight: 600;">Open admin panel → {WEBSITE_URL}</a></p>
         </div>
         <div class="footer">
             <p>This is an automated notification from Auryvia Chat System.</p>
@@ -105,6 +107,7 @@ Message:
 {message}
 
 Reply to this user through the admin panel when you're online.
+Open admin panel: {WEBSITE_URL}
     """
     
     return send_email(ADMIN_EMAIL, subject, html_content, text_content)
@@ -140,6 +143,7 @@ def send_admin_reply_to_user(user_name, user_email, message):
                 <p style="margin: 0; font-size: 16px; line-height: 1.6;">{message}</p>
             </div>
             <p style="color: #666; font-size: 14px;">You can continue the conversation by visiting our website and opening the chat.</p>
+            <p style="margin-top: 15px;"><a href="{WEBSITE_URL}" style="color: #5865f2; font-weight: 600;">Visit our website → {WEBSITE_URL}</a></p>
         </div>
         <div class="footer">
             <p>This is an automated notification. Please do not reply to this email.</p>
@@ -156,6 +160,7 @@ Hi {user_name or 'there'},
 {message}
 
 You can continue the conversation by visiting our website and opening the chat.
+Visit our website: {WEBSITE_URL}
 
 This is an automated notification. Please do not reply to this email.
     """
@@ -178,12 +183,13 @@ def send_general_alert(subject, message):
         <div class="content">
             <h2>{subject}</h2>
             <p style="white-space: pre-line;">{message}</p>
+            <p style="margin-top: 15px;"><a href="{WEBSITE_URL}" style="color: #5865f2; font-weight: 600;">Open admin panel → {WEBSITE_URL}</a></p>
         </div>
     </body>
     </html>
     """
     
-    return send_email(ADMIN_EMAIL, f"🔔 {subject}", html_content, message)
+    return send_email(ADMIN_EMAIL, f"🔔 {subject}", html_content, message + f"\n\nOpen admin panel: {WEBSITE_URL}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

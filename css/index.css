@@ -911,6 +911,27 @@ body {
   box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
 }
 
+#loginModal .login-skip-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+#loginModal .login-skip-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
 /* Google Sign-In Button Container */
 #googleSignInBtnContainer {
   display: flex;

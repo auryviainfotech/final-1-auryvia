@@ -24,24 +24,53 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname)); 
 
-// --- 1. MONGODB CONNECTION ---
+// --- 1. MONGODB CONNECTION (deployment-friendly: retry + longer timeout) ---
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/auryvia';
+const isAtlas = MONGO_URI.includes('mongodb+srv');
+const isDeployment = !!process.env.PORT || process.env.RENDER || process.env.VERCEL;
 
-// MongoDB connection options
+// Deployment: need longer timeout (cold start, DNS). Atlas often needs 15–20s.
+const serverSelectionTimeoutMS = isAtlas || isDeployment ? 20000 : 5000;
 const mongooseOptions = {
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-  socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+  serverSelectionTimeoutMS,
+  socketTimeoutMS: 45000,
+  retryWrites: true,
+  maxPoolSize: 10,
 };
 
-mongoose.connect(MONGO_URI, mongooseOptions)
-  .then(() => {
-    console.log('✅ Connected to MongoDB successfully');
-    console.log(`📊 Database: ${mongoose.connection.name}`);
-  })
-  .catch(err => {
-    console.error('❌ MongoDB Connection Error:', err.message);
-    console.log('⚠️  Server will continue but database features may not work');
-  });
+if (isDeployment && (!process.env.MONGO_URI || process.env.MONGO_URI === 'mongodb://localhost:27017/auryvia')) {
+  console.warn('⚠️  MONGO_URI not set in deployment. Set MONGO_URI in Render Dashboard → Environment.');
+}
+
+function connectMongo() {
+  return mongoose.connect(MONGO_URI, mongooseOptions)
+    .then(() => {
+      console.log('✅ Connected to MongoDB successfully');
+      console.log(`📊 Database: ${mongoose.connection.name}`);
+    })
+    .catch(err => {
+      throw err;
+    });
+}
+
+// Retry connection (helps on Render/Atlas cold start and network delays)
+const MAX_RETRIES = 4;
+const RETRY_DELAY_MS = 3000;
+
+function connectMongoWithRetry(retriesLeft = MAX_RETRIES) {
+  connectMongo()
+    .catch(err => {
+      console.error(`❌ MongoDB connection failed (${MAX_RETRIES - retriesLeft + 1}/${MAX_RETRIES}):`, err.message);
+      if (retriesLeft <= 1) {
+        console.log('⚠️  Server will run without database. Set MONGO_URI and allow 0.0.0.0/0 in Atlas Network Access.');
+        return;
+      }
+      console.log(`🔄 Retrying in ${RETRY_DELAY_MS / 1000}s...`);
+      setTimeout(() => connectMongoWithRetry(retriesLeft - 1), RETRY_DELAY_MS);
+    });
+}
+
+connectMongoWithRetry();
 
 // Handle connection events
 mongoose.connection.on('disconnected', () => {
@@ -73,6 +102,9 @@ if (!EMAIL_USER || !EMAIL_PASSWORD || EMAIL_USER === 'your_brevo_smtp_user' || E
 // Use Gmail SMTP by default, or use SMTP_SERVER from .env if set
 const SMTP_SERVER = process.env.SMTP_SERVER || 'smtp.gmail.com';
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587');
+
+// Website URL for user and admin emails
+const WEBSITE_URL = 'https://auryviainfotech.com';
 
 const transporter = nodemailer.createTransport({
     host: SMTP_SERVER,
@@ -187,7 +219,7 @@ async function sendEmailAlert(subject, text) {
             from: `"Auryvia Notification" <${EMAIL_USER}>`, 
             to: "auryvia.infotech@gmail.com", 
             subject: `🔔 ${subject}`,
-            text: text
+            text: text + `\n\nOpen admin panel: ${WEBSITE_URL}`
         };
         
         const info = await transporter.sendMail(mailOptions);
@@ -244,6 +276,7 @@ async function sendUserMessageEmailToAdmin(chat, message) {
                         <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #333;">${message.replace(/\n/g, '<br>')}</p>
                     </div>
                     <p style="color: #666; font-size: 14px; margin-top: 20px;">Reply to this user through the admin panel when you're online.</p>
+                    <p style="margin-top: 15px;"><a href="${WEBSITE_URL}" style="color: #5865f2; font-weight: 600;">Open admin panel → ${WEBSITE_URL}</a></p>
                     <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
                     <p style="color: #999; font-size: 12px;">This is an automated notification from Auryvia Chat System.</p>
                 </div>
@@ -258,6 +291,7 @@ Message:
 ${message}
 
 Reply to this user through the admin panel when you're online.
+Open admin panel: ${WEBSITE_URL}
             `
         };
         
@@ -310,6 +344,7 @@ async function sendAdminReplyEmailToUser(chat, message) {
                         <p style="margin: 0; font-size: 16px; line-height: 1.6;">${message}</p>
                     </div>
                     <p style="color: #666; font-size: 14px;">You can continue the conversation by visiting our website and opening the chat.</p>
+                    <p style="margin-top: 15px;"><a href="${WEBSITE_URL}" style="color: #5865f2; font-weight: 600;">Visit our website → ${WEBSITE_URL}</a></p>
                     <p style="color: #999; font-size: 12px; margin-top: 30px;">This is an automated notification. Please do not reply to this email.</p>
                 </div>
             `
@@ -395,26 +430,8 @@ io.on('connection', (socket) => {
       // Track user as online (for both new and existing chats)
       userSockets.set(socket.id, { chatId: chat._id, email: safeEmail, name: userData ? userData.name : 'Guest' });
 
-      // 🔔 ALERT: Send email notification if admin is offline
-      const isAdminOnline = adminSockets.size > 0;
-      console.log(`📊 User joined chat:`);
-      console.log(`   - Admin online: ${isAdminOnline}`);
-      console.log(`   - Admin sockets count: ${adminSockets.size}`);
-      console.log(`   - New chat: ${isNewChat}`);
-      console.log(`   - User: ${userData ? userData.name : 'Guest'}`);
-      console.log(`   - Email: ${safeEmail || 'No email'}`);
-      
-      if (!isAdminOnline) {
-        console.log('📧 ADMIN IS OFFLINE - Sending email notification...');
-        const emailSubject = isNewChat ? "New Chat Started!" : "User Reconnected to Chat";
-        const emailMessage = isNewChat 
-          ? `User: ${userData ? userData.name : 'Guest'}\nEmail: ${safeEmail || 'No email'}\nHas started a conversation on the website.`
-          : `User: ${userData ? userData.name : 'Guest'}\nEmail: ${safeEmail || 'No email'}\nHas reconnected to the chat. Check the admin panel for messages.`;
-        
-        await sendEmailAlert(emailSubject, emailMessage);
-      } else {
-        console.log('✅ Admin is online - No email sent (admin can see in real-time)');
-      }
+      // No email on join — admin gets ONE email only when user sends a message (see send_message)
+      console.log(`📊 User joined chat: ${userData ? userData.name : 'Guest'}, Email: ${safeEmail || 'No email'}`);
 
       const allChats = await Chat.find({}).sort({ lastUpdated: -1 });
       io.emit('admin_update_userlist', allChats);
@@ -517,6 +534,16 @@ function getAutoReply(msg) {
   return "Thanks! An agent will be with you shortly.";
 }
 
+// --- Health check (for Render/Vercel deployment) ---
+app.get('/api/health', (req, res) => {
+  const dbConnected = mongoose.connection.readyState === 1;
+  res.status(dbConnected ? 200 : 503).json({
+    status: dbConnected ? 'ok' : 'degraded',
+    mongodb: dbConnected ? 'connected' : 'disconnected',
+    uptime: process.uptime()
+  });
+});
+
 // --- 5. ADMIN LOGIN ---
 app.post('/api/admin/login', (req, res) => {
     const { password } = req.body;
@@ -547,10 +574,10 @@ app.post('/api/appointments', async (req, res) => {
   try {
     await new Appointment(req.body).save();
 
-    // 🔔 ALERT: New Appointment
+    // 🔔 ALERT: New Appointment (include email so admin sees it)
     sendEmailAlert(
         "New Appointment Booked! 📅", 
-        `Name: ${req.body.name}\nPhone: ${req.body.phone}\nType: ${req.body.type}\nDate: ${req.body.date}\nTime: ${req.body.slot.start}`
+        `Name: ${req.body.name}\nEmail: ${req.body.email || 'Not provided'}\nPhone: ${req.body.phone}\nType: ${req.body.type}\nDate: ${req.body.date}\nTime: ${req.body.slot && req.body.slot.start ? req.body.slot.start : '-'}`
     );
 
     res.json({ success: true });

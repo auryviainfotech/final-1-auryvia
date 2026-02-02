@@ -6,5 +6,7 @@ services:
     runtime: node
     buildCommand: npm install
     startCommand: npm run start
-    # Add env vars in Render Dashboard → Environment:
-    # MONGO_URI, EMAIL_USER, EMAIL_PASSWORD, ADMIN_PASS
+    healthCheckPath: /api/health
+    # Required env vars in Render Dashboard → Environment:
+    # MONGO_URI (MongoDB Atlas connection string – allow 0.0.0.0/0 in Atlas Network Access)
+    # Optional: EMAIL_USER, EMAIL_PASSWORD, ADMIN_PASS

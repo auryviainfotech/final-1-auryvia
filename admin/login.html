@@ -47,6 +47,8 @@
             transition: 0.2s;
         }
         button:hover { background: #4338ca; }
+        button.cancel { background: #6b7280; margin-top: 8px; }
+        button.cancel:hover { background: #4b5563; }
         .error { color: red; font-size: 14px; margin-top: 10px; display: none; }
     </style>
 </head>
@@ -57,6 +59,7 @@
         <form id="loginForm">
             <input type="password" id="password" placeholder="Enter Admin Password" required>
             <button type="submit">Login</button>
+            <button type="button" class="cancel" id="cancelBtn">Cancel</button>
             <div id="errorMsg" class="error">Incorrect password</div>
         </form>
     </div>
@@ -64,6 +67,10 @@
     <script>
         // Configure your backend API URL here
         window.API_URL = 'https://auryvia-webpage.onrender.com'; // Use your REAL new URL
+
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            window.location.href = 'https://auryviainfotech.com';
+        });
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();

@@ -110,7 +110,7 @@
             </div>
             <div class="table-container">
                 <table id="appointments-table">
-                    <thead><tr><th>Booked On</th><th>Client Name</th><th>Phone</th><th>Type</th><th>Slot Date</th><th>Time</th></tr></thead>
+                    <thead><tr><th>Booked On</th><th>Client Name</th><th>Email</th><th>Phone</th><th>Type</th><th>Slot Date</th><th>Time</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -152,7 +152,7 @@
 
     async function loadData() {
         document.querySelector('#contacts-table tbody').innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
-        document.querySelector('#appointments-table tbody').innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+        document.querySelector('#appointments-table tbody').innerHTML = '<tr><td colspan="7">Loading...</td></tr>';
 
         try {
             const res = await fetch('/api/admin/dashboard-data');
@@ -170,18 +170,19 @@
             ).join('');
             document.querySelector('#contacts-table tbody').innerHTML = contactRows || '<tr><td colspan="5">No inquiries yet.</td></tr>';
 
-            // Render Appointments
+            // Render Appointments (include email column)
             const appointmentRows = data.appointments.map(a => 
                 `<tr>
                     <td>${new Date(a.createdAt).toLocaleDateString()}</td>
                     <td><strong>${a.name}</strong></td>
-                    <td>${a.phone}</td>
-                    <td><span style="background:#e0e7ff; color:#4338ca; padding:2px 8px; border-radius:4px; font-size:12px">${a.type.toUpperCase()}</span></td>
-                    <td>${a.date}</td>
-                    <td>${a.slot.start} - ${a.slot.end}</td>
+                    <td>${a.email || '-'}</td>
+                    <td>${a.phone || '-'}</td>
+                    <td><span style="background:#e0e7ff; color:#4338ca; padding:2px 8px; border-radius:4px; font-size:12px">${(a.type || '').toUpperCase()}</span></td>
+                    <td>${a.date || '-'}</td>
+                    <td>${a.slot && a.slot.start && a.slot.end ? a.slot.start + ' - ' + a.slot.end : '-'}</td>
                 </tr>`
             ).join('');
-            document.querySelector('#appointments-table tbody').innerHTML = appointmentRows || '<tr><td colspan="6">No appointments yet.</td></tr>';
+            document.querySelector('#appointments-table tbody').innerHTML = appointmentRows || '<tr><td colspan="7">No appointments yet.</td></tr>';
 
         } catch (err) {
             console.error("Load Error:", err);

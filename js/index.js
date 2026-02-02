@@ -91,6 +91,7 @@ const loginModal = document.getElementById('loginModal');
 const visitorNameInput = document.getElementById('visitorName');
 const visitorEmailInput = document.getElementById('visitorEmail');
 const visitorLoginBtn = document.getElementById('visitorLoginBtn');
+const loginSkipBtn = document.getElementById('loginSkipBtn');
 
 let socket = null;
 let currentUser = null;
@@ -140,6 +141,17 @@ if(visitorLoginBtn) {
     });
 }
 
+// Skip for now: connect as Guest so they can use the chatbot without signing in
+if (loginSkipBtn) {
+    loginSkipBtn.addEventListener('click', () => {
+        currentUser = { name: 'Guest', email: '' };
+        sessionStorage.setItem('ayurviaGuest', 'true');
+        connectSocket(currentUser);
+        if (loginModal) loginModal.style.display = 'none';
+        if (chatbotContainer) chatbotContainer.classList.add('show');
+    });
+}
+
 // 3. CONNECT TO SERVER
 function connectSocket(user) {
     if (typeof io !== 'undefined') {
@@ -166,18 +178,22 @@ function connectSocket(user) {
     }
 }
 
-// Toggle UI - Show login modal if not logged in, otherwise show chatbot
+// Toggle UI - Show login modal if not logged in (and not guest), otherwise show chatbot
 if (chatbotToggle) {
     chatbotToggle.addEventListener('click', () => {
-        // Check if user is logged in
         const storedUser = sessionStorage.getItem('ayurviaUser');
+        const isGuest = sessionStorage.getItem('ayurviaGuest');
         
-        if (!storedUser) {
-            // User not logged in -> Show login modal
-            if(loginModal) loginModal.style.display = 'flex';
-        } else {
-            // User is logged in -> Show chatbot
+        if (storedUser) {
+            // Logged in -> Show chatbot
             if (chatbotContainer) chatbotContainer.classList.add('show');
+        } else if (isGuest) {
+            // Skipped before -> Connect as Guest if needed, then show chatbot
+            if (!socket) connectSocket({ name: 'Guest', email: '' });
+            if (chatbotContainer) chatbotContainer.classList.add('show');
+        } else {
+            // Not logged in and not guest -> Show login modal
+            if (loginModal) loginModal.style.display = 'flex';
         }
     });
 }
@@ -209,7 +225,17 @@ function addMessageToUI(text, className) {
 document.querySelectorAll('.chatbot-quick-replies .quick-reply').forEach(btn => {
   btn.addEventListener('click', function() {
     const msg = btn.getAttribute('data-message');
-    if (msg && chatbotInput) {
+    if (!msg) return;
+    // "Book an appointment" / Book Meeting -> open appointment modal and send message
+    if (msg === 'Book an appointment') {
+      if (typeof openAppointmentModal === 'function') openAppointmentModal();
+      if (chatbotInput) {
+        chatbotInput.value = msg;
+        sendMessage();
+      }
+      return;
+    }
+    if (chatbotInput) {
       chatbotInput.value = msg;
       sendMessage();
     }
