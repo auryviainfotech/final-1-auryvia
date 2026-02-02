@@ -6,6 +6,23 @@ This app uses **Socket.io** (persistent WebSocket connections) and a long-runnin
 
 ---
 
+## Render: "Cannot find module 'express'" or wrong build
+
+If the deploy fails with **Error: Cannot find module 'express'**, Render is building with **Python** instead of **Node**, so `npm install` never runs.
+
+**Fix in Render Dashboard:**
+
+1. Open your **Web Service** (e.g. final-1-auryvia) → **Settings**.
+2. Under **Build & Deploy**:
+   - **Runtime:** set to **Node** (not Python).
+   - **Build Command:** set to **`npm install`** (not `pip install -r requirements.txt`).
+   - **Start Command:** keep **`npm run start`** (or `node server.js`).
+3. **Save Changes**, then trigger a **Manual Deploy** → **Deploy latest commit**.
+
+The repo has both `package.json` (Node) and `requirements.txt` (Python for optional email script). The main app is Node; the build must run `npm install` so Express and other dependencies are installed.
+
+---
+
 ## Render: MongoDB not connecting
 
 If the app deploys but **MongoDB does not connect** (chats/appointments/contacts not saving, or logs show `MongoDB Connection Error`), do the following.
