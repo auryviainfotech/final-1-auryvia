@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Professional digital services from web development to IT solutions. Premium quality, measurable results." />
+    <meta name="theme-color" content="#5865f2" />
+
+    <title>Services | Ayurvia Infotech</title>
+
+    <link rel="icon" type="image/png" href="assets/tab-icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/services.css" />
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="container header-inner">
+
+            <div class="logo-container" id="mainLogo">
+                <!-- LOGO (STATIC IMAGE) -->
+                <a href="index.html" class="logo-link" aria-label="Go to homepage">
+                    <img src="assets/auryvia.png" alt="Ayurvia Infotech Logo" class="logo-image" />
+                </a>
+
+            </div>
+
+            <div class="header-actions">
+                <a href="contact.html" class="cta-btn" aria-label="Contact us">
+                    <span>Let's talk</span>
+                </a>
+
+                <button class="hamburger" id="hamburger" aria-label="Open navigation menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MENU BACKDROP ===== -->
+    <div class="menu-backdrop" id="menuBackdrop" aria-hidden="true"></div>
+
+    <!-- ===== MENU PANEL ===== -->
+    <nav class="menu-panel" id="menuPanel" aria-label="Main navigation" aria-hidden="true">
+        <button class="menu-close" id="menuClose" aria-label="Close navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+
+        <div class="menu-links">
+            <a href="work.html" class="menu-link">
+                <span class="menu-link-text">Work</span>
+            </a>
+            <a href="services.html" class="menu-link">
+                <span class="menu-link-text">Services</span>
+            </a>
+            <a href="agency.html" class="menu-link">
+                <span class="menu-link-text">Agency</span>
+            </a>
+            <a href="contact.html" class="menu-link">
+                <span class="menu-link-text">Contact</span>
+            </a>
+        </div>
+
+        <div class="menu-footer">
+            <p class="menu-footer-text">Follow us</p>
+            <div class="menu-social">
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram" class="social-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+                <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn" class="social-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                </a>
+                <a href="https://twitter.com" target="_blank" aria-label="Twitter" class="social-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                    </svg>
+                </a>
+                <a href="https://facebook.com" target="_blank" aria-label="Facebook" class="social-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== SERVICES HERO ===== -->
+    <section class="services-hero">
+        <div class="container">
+            <div class="services-hero-content">
+                <h1>Services that drive meaningful results</h1>
+                <p class="services-hero-text">
+                    From strategy to execution, we build digital solutions that combine 
+                    technical excellence with business intelligence. Every project is 
+                    designed to deliver measurable outcomes and long-term value.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SERVICES OVERVIEW ===== -->
+    <section class="services-overview">
+        <div class="container">
+            <div class="services-grid">
+
+                <div class="service-card" data-target="web">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Custom websites built with modern frameworks, optimized for performance, accessibility and scalability.</p>
+                    <div class="service-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="service-card" data-target="app">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    <h3>App Development</h3>
+                    <p>Native and cross-platform applications designed for seamless user experiences and reliable performance.</p>
+                    <div class="service-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="service-card" data-target="digital">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <h3>Digital Marketing</h3>
+                    <p>Data-driven strategies that increase visibility, engagement and conversions across digital channels.</p>
+                    <div class="service-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="service-card" data-target="influencer">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>Influencer Marketing</h3>
+                    <p>Authentic brand partnerships with creators who align with your values and connect with your audience.</p>
+                    <div class="service-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="service-card" data-target="it">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                    <h3>IT Tech Solutions</h3>
+                    <p>Comprehensive technology support from infrastructure to cloud services, built for operational efficiency.</p>
+                    <div class="service-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SERVICE DETAILS ===== -->
+    <section class="services-details">
+        <div class="container">
+
+            <div class="service-detail" id="web">
+                <div class="detail-badge">01</div>
+                <h2>Web Development</h2>
+                <p class="detail-intro">
+                    We build websites that are fast, secure and built to scale with your business.
+                </p>
+                <div class="detail-content">
+                    <p>
+                        Our web development process starts with understanding your business objectives and 
+                        user needs. We design and build custom solutions using modern technologies like React, 
+                        Vue, Next.js and headless CMS platforms. Every site is optimized for performance, 
+                        accessibility and SEO from the ground up.
+                    </p>
+                    <p>
+                        We focus on clean architecture, maintainable code and responsive design that works 
+                        seamlessly across all devices. Our development approach ensures your website can 
+                        adapt and grow as your business evolves.
+                    </p>
+                </div>
+                <div class="detail-features">
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Custom design & development</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Performance optimization</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Responsive & accessible</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>SEO-ready architecture</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-detail" id="app">
+                <div class="detail-badge">02</div>
+                <h2>App Development</h2>
+                <p class="detail-intro">
+                    Mobile and web applications that deliver smooth experiences and measurable business outcomes.
+                </p>
+                <div class="detail-content">
+                    <p>
+                        From concept to deployment, we develop applications that solve real problems. Our team 
+                        works with native iOS and Android development as well as cross-platform frameworks like 
+                        React Native and Flutter. We prioritize user experience, performance and security at 
+                        every stage of development.
+                    </p>
+                    <p>
+                        Each application is thoroughly tested across devices and scenarios to ensure stability 
+                        and reliability. We build with maintainability in mind, making it easier to add features 
+                        and scale your app as your user base grows.
+                    </p>
+                </div>
+                <div class="detail-features">
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Native & cross-platform</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>UI/UX design integration</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>API & backend development</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>App store deployment</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-detail" id="digital">
+                <div class="detail-badge">03</div>
+                <h2>Digital Marketing</h2>
+                <p class="detail-intro">
+                    Strategic campaigns that attract the right audience and drive meaningful engagement.
+                </p>
+                <div class="detail-content">
+                    <p>
+                        Our digital marketing approach combines data analysis with creative execution. We develop 
+                        strategies across SEO, paid advertising, content marketing and social media that align 
+                        with your business goals. Every campaign is built on research, tested rigorously and 
+                        optimized continuously based on performance data.
+                    </p>
+                    <p>
+                        We focus on sustainable growth through authentic brand positioning, targeted messaging 
+                        and conversion optimization. Our team tracks key metrics and provides transparent 
+                        reporting so you can see exactly how your investment translates into results.
+                    </p>
+                </div>
+                <div class="detail-features">
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>SEO & content strategy</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Paid media campaigns</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Social media management</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Analytics & reporting</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-detail" id="influencer">
+                <div class="detail-badge">04</div>
+                <h2>Influencer Marketing</h2>
+                <p class="detail-intro">
+                    Authentic partnerships that build trust and expand your reach through credible voices.
+                </p>
+                <div class="detail-content">
+                    <p>
+                        We connect brands with creators who share your values and resonate with your target 
+                        audience. Our influencer marketing service includes creator discovery, campaign strategy, 
+                        content development and performance tracking. We prioritize authenticity and alignment 
+                        over follower counts.
+                    </p>
+                    <p>
+                        Each campaign is tailored to your objectives, whether that's brand awareness, product 
+                        launches or community building. We manage relationships, negotiate partnerships and 
+                        ensure content meets both brand standards and creator authenticity.
+                    </p>
+                </div>
+                <div class="detail-features">
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Creator identification & vetting</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Campaign strategy & planning</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Content oversight & approval</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Performance measurement</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-detail" id="it">
+                <div class="detail-badge">05</div>
+                <h2>IT Tech Solutions</h2>
+                <p class="detail-intro">
+                    Comprehensive technology support that keeps your business running efficiently.
+                </p>
+                <div class="detail-content">
+                    <p>
+                        Our IT solutions cover everything from system integration and cloud migration to 
+                        cybersecurity and infrastructure management. We work with businesses to assess their 
+                        technology needs, identify inefficiencies and implement solutions that reduce complexity 
+                        while improving performance.
+                    </p>
+                    <p>
+                        We specialize in modernizing legacy systems, automating workflows and ensuring your 
+                        technology infrastructure can scale with your business. Our team provides ongoing 
+                        support and consulting to help you navigate technical decisions with confidence.
+                    </p>
+                </div>
+                <div class="detail-features">
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Cloud services & migration</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>System integration</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Cybersecurity & compliance</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Technical consulting</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== PROCESS SECTION ===== -->
+    <section class="process-section">
+        <div class="container">
+            <div class="process-header">
+                <h2>How we work</h2>
+                <p>A collaborative approach that delivers results</p>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="step-number">01</div>
+                    <h3>Discovery</h3>
+                    <p>We start by understanding your business, goals and challenges through detailed conversations and research.</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">02</div>
+                    <h3>Strategy</h3>
+                    <p>Based on our findings, we develop a clear roadmap that aligns technical execution with business objectives.</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">03</div>
+                    <h3>Execution</h3>
+                    <p>Our team designs, develops and tests your solution with regular check-ins and transparent communication.</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">04</div>
+                    <h3>Launch & Support</h3>
+                    <p>We handle deployment, monitor performance and provide ongoing support to ensure long-term success.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FINAL CTA ===== -->
+    <section class="final-cta">
+        <div class="container final-cta-inner">
+            <h2>
+                Ready to start a project?<br />
+                Let's discuss what we can build together.
+            </h2>
+
+            <p>
+                Whether you have a detailed brief or just an idea, we're here to help you 
+                turn it into something meaningful.
+            </p>
+
+            <a href="contact.html" class="final-cta-btn" aria-label="Contact us">Get in touch</a>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container footer-main">
+            
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <a href="index.html" aria-label="Ayurvia Infotech Home">
+                        <img src="assets/footer logo.png" alt="Ayurvia Infotech" class="footer-logo-image" />
+                    </a>
+                </div>
+                <p class="footer-tagline">Crafting unforgettable digital experiences since 2005</p>
+                
+                <div class="footer-social">
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                            <rect x="2" y="9" width="4" height="12"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                        </svg>
+                    </a>
+                    <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-links-group">
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="agency.html">About Us</a></li>
+                        <li><a href="work.html">Our Work</a></li>
+                        <li><a href="services.html">Services</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#web">Web Development</a></li>
+                        <li><a href="#app">App Development</a></li>
+                        <li><a href="#digital">Digital Marketing</a></li>
+                        <li><a href="#it">IT Solutions</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                                        <ul class="footer-contact-list">
+                        <li>
+                            <a href="tel:+919777734444">+91 97777 34444</a>
+                            <a href="tel:+917207310635">+91 72073 10635</a>
+                        </li>
+                        <li>
+                            <a href="mailto:auryvia.infotech@gmail.com">auryvia.infotech@gmail.com</a>
+                        </li>
+                        <li>Road. No 45 Jubilee hills Hyderabad Telangana 500033</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container footer-bottom">
+            <div class="footer-legal">
+                <span>© 2025 Ayurvia Infotech. All rights reserved.</span>
+            </div>
+            <div class="footer-links">
+                <a href="#privacy">Privacy Policy</a>
+                <span class="separator">•</span>
+                <a href="#terms">Terms & Conditions</a>
+                <span class="separator">•</span>
+                <a href="#cookies">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/services.js"></script>
+</body>
+
+</html>

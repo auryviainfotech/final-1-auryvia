@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ayurvia Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #5865f2; --bg: #f3f4f6; --white: #ffffff; --text: #1f2937; }
+        body { font-family: 'Inter', sans-serif; margin: 0; display: flex; height: 100vh; background: var(--bg); color: var(--text); }
+        
+        /* Sidebar */
+        .sidebar { width: 250px; background: var(--white); border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+        .brand { padding: 20px; font-size: 20px; font-weight: 700; color: var(--primary); border-bottom: 1px solid #e5e7eb; }
+        .nav-item { padding: 15px 20px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        .nav-item:hover, .nav-item.active { background: #eef2ff; color: var(--primary); border-right: 3px solid var(--primary); }
+        
+        /* Main Content */
+        .main { flex: 1; padding: 20px; overflow: hidden; display: flex; flex-direction: column; }
+        .view-section { display: none; height: 100%; flex-direction: column; }
+        .view-section.active { display: flex; }
+
+        /* Header Bar (Title + Refresh) */
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .header-bar h2 { margin: 0; font-size: 20px; }
+        .refresh-btn { 
+            background: white; border: 1px solid #ddd; padding: 8px 15px; 
+            border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; 
+            transition: 0.2s;
+        }
+        .refresh-btn:hover { background: #f9fafb; border-color: #ccc; }
+        .refresh-btn:active { transform: scale(0.98); }
+        
+        /* Chat UI */
+        #chat-layout { display: flex; flex: 1; background: var(--white); border-radius: 8px; border: 1px solid #e5e7eb; overflow: hidden; }
+        #user-list { width: 250px; border-right: 1px solid #eee; overflow-y: auto; background: #fafafa; }
+        .chat-user { padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s; }
+        .chat-user:hover { background: #f3f4f6; }
+        .chat-user.active-chat { background: #e0e7ff; border-left: 3px solid var(--primary); }
+        
+        #chat-window { flex: 1; display: flex; flex-direction: column; }
+        #messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: white; }
+        .msg { padding: 10px 15px; border-radius: 10px; max-width: 70%; font-size: 14px; line-height: 1.4; }
+        .msg.user { background: #f3f4f6; align-self: flex-start; border-bottom-left-radius: 0; }
+        .msg.admin { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 0; }
+        
+        .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fff; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; }
+        input:focus { border-color: var(--primary); }
+        button.send-btn { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 6px; cursor: pointer; }
+        
+        /* Tables */
+        .table-container { flex: 1; overflow-y: auto; background: white; border-radius: 8px; border: 1px solid #eee; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+        th { background: #f9fafb; font-weight: 600; position: sticky; top: 0; }
+        tr:hover { background: #f9fafb; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">Ayurvia Admin</div>
+        <div class="nav-item active" onclick="switchTab('chats', this)">💬 Live Chats</div>
+        <div class="nav-item" onclick="switchTab('contacts', this)">📬 Inquiries</div>
+        <div class="nav-item" onclick="switchTab('appointments', this)">📅 Appointments</div>
+    </div>
+
+    <div class="main">
+        <div id="chats" class="view-section active">
+            <div class="header-bar">
+                <h2>Live Chats</h2>
+                <button class="refresh-btn" onclick="refreshChats()">🔄 Refresh List</button>
+            </div>
+            <div id="chat-layout">
+                <div id="user-list">
+                    <div style="padding:20px; color:#999; text-align:center">Loading chats...</div>
+                </div>
+                <div id="chat-window">
+                    <div id="messages">
+                        <div style="text-align:center; color:#999; margin-top:50px">
+                            Select a user from the left to start chatting manually.<br>
+                            (Bot is active until you join)
+                        </div>
+                    </div>
+                    <div class="input-area">
+                        <input type="text" id="adminInput" placeholder="Type a reply...">
+                        <button class="send-btn" onclick="sendReply()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="contacts" class="view-section">
+            <div class="header-bar">
+                <h2>Inquiries</h2>
+                <button class="refresh-btn" onclick="loadData()">🔄 Refresh Data</button>
+            </div>
+            <div class="table-container">
+                <table id="contacts-table">
+                    <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Subject</th><th>Message</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="appointments" class="view-section">
+            <div class="header-bar">
+                <h2>Appointments</h2>
+                <button class="refresh-btn" onclick="loadData()">🔄 Refresh Data</button>
+            </div>
+            <div class="table-container">
+                <table id="appointments-table">
+                    <thead><tr><th>Booked On</th><th>Client Name</th><th>Phone</th><th>Type</th><th>Slot Date</th><th>Time</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    if (!sessionStorage.getItem('adminAuth')) {
+        window.location.href = '/login.html';
+    }
+</script>
+
+<script>
+    const socket = io();
+    let currentChatId = null;
+
+    // --- INITIALIZATION ---
+    socket.emit('admin_connected'); 
+
+    // --- TABS LOGIC ---
+    function switchTab(tabId, el) {
+        document.querySelectorAll('.view-section').forEach(d => d.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(d => d.classList.remove('active'));
+        el.classList.add('active');
+        
+        if(tabId === 'chats') refreshChats();
+        else loadData();
+    }
+
+    // --- REFRESH FUNCTIONS ---
+    function refreshChats() {
+        const list = document.getElementById('user-list');
+        list.innerHTML = '<div style="padding:15px; color:#999; text-align:center">Refreshing...</div>';
+        socket.emit('admin_connected'); 
+    }
+
+    async function loadData() {
+        document.querySelector('#contacts-table tbody').innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
+        document.querySelector('#appointments-table tbody').innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+
+        try {
+            const res = await fetch('/api/admin/dashboard-data');
+            const data = await res.json();
+            
+            // Render Contacts
+            const contactRows = data.contacts.map(c => 
+                `<tr>
+                    <td>${new Date(c.date).toLocaleDateString()}</td>
+                    <td><strong>${c.name}</strong></td>
+                    <td>${c.email}</td>
+                    <td>${c.subject || '-'}</td>
+                    <td>${c.message}</td>
+                </tr>`
+            ).join('');
+            document.querySelector('#contacts-table tbody').innerHTML = contactRows || '<tr><td colspan="5">No inquiries yet.</td></tr>';
+
+            // Render Appointments
+            const appointmentRows = data.appointments.map(a => 
+                `<tr>
+                    <td>${new Date(a.createdAt).toLocaleDateString()}</td>
+                    <td><strong>${a.name}</strong></td>
+                    <td>${a.phone}</td>
+                    <td><span style="background:#e0e7ff; color:#4338ca; padding:2px 8px; border-radius:4px; font-size:12px">${a.type.toUpperCase()}</span></td>
+                    <td>${a.date}</td>
+                    <td>${a.slot.start} - ${a.slot.end}</td>
+                </tr>`
+            ).join('');
+            document.querySelector('#appointments-table tbody').innerHTML = appointmentRows || '<tr><td colspan="6">No appointments yet.</td></tr>';
+
+        } catch (err) {
+            console.error("Load Error:", err);
+            alert("Failed to load data. Check server connection.");
+        }
+    }
+
+    // --- CHAT LOGIC (Updated for Named Users) ---
+    socket.on('admin_update_userlist', (chats) => {
+        const list = document.getElementById('user-list');
+        list.innerHTML = ''; 
+        
+        if(chats.length === 0) {
+            list.innerHTML = '<div style="padding:20px; text-align:center; color:#999">No active chats found</div>';
+            return;
+        }
+
+        chats.forEach(chat => {
+            const div = document.createElement('div');
+            div.className = `chat-user ${chat.socketId === currentChatId ? 'active-chat' : ''}`;
+            
+            // 🆕 DISPLAY NAME LOGIC:
+            // If name exists and isn't "Guest", use it. Otherwise, use "User ID".
+            const displayName = (chat.name && chat.name !== 'Guest') ? chat.name : `User ${chat.socketId.substr(0,4)}`;
+            
+            const lastMsg = chat.messages.length > 0 
+                ? chat.messages[chat.messages.length - 1].text.substring(0, 25) + (chat.messages[chat.messages.length - 1].text.length > 25 ? '...' : '') 
+                : 'New Session';
+            
+            // Added Email display below the message
+            div.innerHTML = `
+                <div style="font-weight:600; font-size:14px; margin-bottom:2px">${displayName}</div>
+                <div style="font-size:12px; color:#666">${lastMsg}</div>
+                <div style="font-size:10px; color:#aaa; margin-top:4px">${chat.email || ''}</div>
+            `;
+            
+            div.onclick = () => openChat(chat);
+            list.appendChild(div);
+        });
+    });
+
+    function openChat(chat) {
+        if(currentChatId) socket.emit('admin_leave_chat', currentChatId);
+        
+        currentChatId = chat.socketId;
+        socket.emit('admin_join_chat', currentChatId); 
+        
+        document.querySelectorAll('.chat-user').forEach(el => el.classList.remove('active-chat'));
+        renderChatWindow(chat.messages);
+    }
+
+    socket.on('admin_receive_message', (data) => {
+        if(data.socketId === currentChatId) {
+            const box = document.getElementById('messages');
+            box.innerHTML += `<div class="msg ${data.sender}">${data.message}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+    });
+
+    function sendReply() {
+        const text = document.getElementById('adminInput').value;
+        if(!currentChatId) {
+            alert("Please select a user from the list first.");
+            return;
+        }
+        if(!text.trim()) return;
+        
+        socket.emit('admin_send_message', { targetSocketId: currentChatId, message: text });
+        
+        const box = document.getElementById('messages');
+        box.innerHTML += `<div class="msg admin">${text}</div>`;
+        box.scrollTop = box.scrollHeight;
+        document.getElementById('adminInput').value = '';
+    }
+
+    function renderChatWindow(messages) {
+        const box = document.getElementById('messages');
+        box.innerHTML = '';
+        if(messages.length === 0) {
+            box.innerHTML = '<div style="text-align:center; color:#ccc; margin-top:50px">No messages yet</div>';
+            return;
+        }
+        messages.forEach(m => {
+            box.innerHTML += `<div class="msg ${m.sender}">${m.text}</div>`;
+        });
+        box.scrollTop = box.scrollHeight;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "ayurvia",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^8.9.5",
+    "nodemailer": "^7.0.12",
+    "socket.io": "^4.8.3"
+  }
+}

@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Environment (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# Logs & build
+*.log
+npm-debug.log*
+
+# Optional: keep ayurvia.zip out if you prefer
+# ayurvia.zip

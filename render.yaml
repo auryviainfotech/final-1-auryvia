@@ -1,0 +1,10 @@
+# Render Blueprint – use npm (project has package-lock.json)
+# https://docs.render.com/blueprint-spec
+services:
+  - type: web
+    name: final-auryvia
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm run start
+    # Add env vars in Render Dashboard → Environment:
+    # MONGO_URI, EMAIL_USER, EMAIL_PASSWORD, ADMIN_PASS
