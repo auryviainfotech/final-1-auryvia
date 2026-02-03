@@ -460,11 +460,11 @@ if (contactForm && submitBtn) {
     submitBtn.disabled = true;
     
     try {
-      // Get API URL from window config
-      const apiUrl = window.API_URL || '/api/contact';
-      
-      // Send to backend API
-      const response = await fetch(`${apiUrl}/api/contact`, {
+      // Backend base URL (empty = same origin). Contact endpoint is always /api/contact
+      const baseUrl = (window.API_URL || '').replace(/\/$/, '');
+      const contactUrl = baseUrl ? `${baseUrl}/api/contact` : '/api/contact';
+
+      const response = await fetch(contactUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
