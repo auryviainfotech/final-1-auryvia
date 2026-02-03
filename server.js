@@ -198,35 +198,27 @@ function sendEmailViaPython(action, ...args) {
     });
 }
 
-// Email notification functions - Try Python first, fallback to Node.js
+// Email notification functions - Try Node.js first (works on Render), then Python as fallback
 async function sendEmailAlert(subject, text) {
-    // Try Python first
+    if (EMAIL_USER && EMAIL_PASSWORD && EMAIL_USER !== 'your_brevo_smtp_user' && EMAIL_PASSWORD !== 'your_brevo_smtp_password') {
+        try {
+            const mailOptions = {
+                from: `"Auryvia Notification" <${EMAIL_USER}>`,
+                to: "auryvia.infotech@gmail.com",
+                subject: `🔔 ${subject}`,
+                text: text + `\n\nOpen admin panel: ${WEBSITE_URL}`
+            };
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`✅ Email sent successfully to auryvia.infotech@gmail.com! ID: ${info.messageId}`);
+            return;
+        } catch (error) {
+            console.log('⚠️  Node.js email failed:', error.message, '- trying Python...');
+        }
+    }
     try {
         await sendEmailViaPython('alert', subject, text);
-        return;
     } catch (pythonError) {
-        console.log('⚠️  Python email failed, trying Node.js method...');
-    }
-    
-    // Fallback to Node.js method
-    if (!EMAIL_USER || !EMAIL_PASSWORD || EMAIL_USER === 'your_brevo_smtp_user' || EMAIL_PASSWORD === 'your_brevo_smtp_password') {
-        console.error('❌ Cannot send email: Email credentials not configured');
-        return;
-    }
-    
-    try {
-        const mailOptions = {
-            from: `"Auryvia Notification" <${EMAIL_USER}>`, 
-            to: "auryvia.infotech@gmail.com", 
-            subject: `🔔 ${subject}`,
-            text: text + `\n\nOpen admin panel: ${WEBSITE_URL}`
-        };
-        
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`✅ Email sent successfully to auryvia.infotech@gmail.com! ID: ${info.messageId}`);
-    } catch (error) {
-        console.error('❌ Email Failed:', error.message);
-        console.error('   Full error:', error);
+        if (!EMAIL_USER || !EMAIL_PASSWORD) console.error('❌ Cannot send email: Set EMAIL_USER and EMAIL_PASSWORD in Render Environment.');
     }
 }
 
@@ -235,34 +227,15 @@ async function sendUserMessageEmailToAdmin(chat, message) {
     const userName = chat.name || 'Guest';
     const userEmail = chat.email || '';
     const adminEmail = 'auryvia.infotech@gmail.com';
-    
+
     console.log(`📧 Attempting to send email to admin: ${adminEmail}`);
     console.log(`   User: ${userName}, Email: ${userEmail}, Message: ${message.substring(0, 50)}...`);
-    
-    // Try Python first
-    try {
-        console.log('🐍 Trying Python email method...');
-        await sendEmailViaPython('user_message', userName, userEmail, message);
-        console.log('✅ Python email sent successfully!');
-        return;
-    } catch (pythonError) {
-        console.log('⚠️  Python email failed:', pythonError.message);
-        console.log('   Trying Node.js method as fallback...');
-    }
-    
-    // Fallback to Node.js method
-    if (!EMAIL_USER || !EMAIL_PASSWORD || EMAIL_USER === 'your_brevo_smtp_user' || EMAIL_PASSWORD === 'your_brevo_smtp_password' || !EMAIL_USER.includes('@')) {
-        console.error('❌ Cannot send email: Email credentials not configured properly');
-        console.error(`   EMAIL_USER: ${EMAIL_USER ? 'Set but invalid' : 'Not set'}`);
-        console.error(`   EMAIL_PASSWORD: ${EMAIL_PASSWORD ? 'Set' : 'Not set'}`);
-        console.error('   Please set valid EMAIL_USER and EMAIL_PASSWORD in your .env file');
-        return;
-    }
-    
-    try {
-        console.log('📨 Using Node.js email method...');
-        const mailOptions = {
-            from: `"Auryvia Chat" <${EMAIL_USER}>`,
+
+    // Try Node.js first (works on Render without Python/dotenv)
+    if (EMAIL_USER && EMAIL_PASSWORD && EMAIL_USER !== 'your_brevo_smtp_user' && EMAIL_PASSWORD !== 'your_brevo_smtp_password' && EMAIL_USER.includes('@')) {
+        try {
+            const mailOptions = {
+                from: `"Auryvia Chat" <${EMAIL_USER}>`,
             to: adminEmail,
             subject: `💬 New Message from ${userName}`,
             html: `
@@ -293,17 +266,23 @@ ${message}
 Reply to this user through the admin panel when you're online.
 Open admin panel: ${WEBSITE_URL}
             `
-        };
-        
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`✅ Email sent successfully to ${adminEmail}!`);
-        console.log(`   Message ID: ${info.messageId}`);
-        console.log(`   Response: ${info.response}`);
-    } catch (error) {
-        console.error('❌ Email Failed with error:');
-        console.error('   Error message:', error.message);
-        console.error('   Error code:', error.code);
-        console.error('   Full error:', error);
+            };
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`✅ Email sent successfully to ${adminEmail}!`);
+            console.log(`   Message ID: ${info.messageId}`);
+            return;
+        } catch (error) {
+            console.log('⚠️  Node.js email failed:', error.message, '- trying Python...');
+        }
+    }
+
+    try {
+        await sendEmailViaPython('user_message', userName, userEmail, message);
+        console.log('✅ Python email sent successfully!');
+    } catch (pythonError) {
+        if (!EMAIL_USER || !EMAIL_PASSWORD) {
+            console.error('❌ Cannot send email: Set EMAIL_USER and EMAIL_PASSWORD in Render Environment.');
+        }
     }
 }
 
@@ -313,48 +292,42 @@ async function sendAdminReplyEmailToUser(chat, message) {
         console.log('⚠️  Cannot send email: User has no email address');
         return;
     }
-    
+
     const userName = chat.name || 'there';
     const userEmail = chat.email;
-    
-    // Try Python first
+
+    // Try Node.js first (works on Render without Python/dotenv)
+    if (EMAIL_USER && EMAIL_PASSWORD && EMAIL_USER !== 'your_brevo_smtp_user' && EMAIL_PASSWORD !== 'your_brevo_smtp_password') {
+        try {
+            const mailOptions = {
+                from: `"Auryvia Support" <${EMAIL_USER}>`,
+                to: userEmail,
+                subject: `Re: Your Message - Auryvia Support`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #333;">Reply from Auryvia Support</h2>
+                        <p>Hi ${userName},</p>
+                        <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                            <p style="margin: 0; font-size: 16px; line-height: 1.6;">${message}</p>
+                        </div>
+                        <p style="color: #666; font-size: 14px;">You can continue the conversation by visiting our website and opening the chat.</p>
+                        <p style="margin-top: 15px;"><a href="${WEBSITE_URL}" style="color: #5865f2; font-weight: 600;">Visit our website → ${WEBSITE_URL}</a></p>
+                        <p style="color: #999; font-size: 12px; margin-top: 30px;">This is an automated notification. Please do not reply to this email.</p>
+                    </div>
+                `
+            };
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`✅ User notification email sent to ${userEmail}! ID: ${info.messageId}`);
+            return;
+        } catch (error) {
+            console.log('⚠️  Node.js email failed:', error.message, '- trying Python...');
+        }
+    }
+
     try {
         await sendEmailViaPython('admin_reply', userName, userEmail, message);
-        return;
     } catch (pythonError) {
-        console.log('⚠️  Python email failed, trying Node.js method...');
-    }
-    
-    // Fallback to Node.js method
-    if (!EMAIL_USER || !EMAIL_PASSWORD || EMAIL_USER === 'your_brevo_smtp_user' || EMAIL_PASSWORD === 'your_brevo_smtp_password') {
-        console.error('❌ Cannot send email: Email credentials not configured');
-        return;
-    }
-    
-    try {
-        const mailOptions = {
-            from: `"Auryvia Support" <${EMAIL_USER}>`,
-            to: userEmail,
-            subject: `Re: Your Message - Auryvia Support`,
-            html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #333;">Reply from Auryvia Support</h2>
-                    <p>Hi ${userName},</p>
-                    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                        <p style="margin: 0; font-size: 16px; line-height: 1.6;">${message}</p>
-                    </div>
-                    <p style="color: #666; font-size: 14px;">You can continue the conversation by visiting our website and opening the chat.</p>
-                    <p style="margin-top: 15px;"><a href="${WEBSITE_URL}" style="color: #5865f2; font-weight: 600;">Visit our website → ${WEBSITE_URL}</a></p>
-                    <p style="color: #999; font-size: 12px; margin-top: 30px;">This is an automated notification. Please do not reply to this email.</p>
-                </div>
-            `
-        };
-        
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`✅ User notification email sent to ${userEmail}! ID: ${info.messageId}`);
-    } catch (error) {
-        console.error('❌ User Email Failed:', error.message);
-        console.error('   Full error:', error);
+        if (!EMAIL_USER || !EMAIL_PASSWORD) console.error('❌ Cannot send email: Set EMAIL_USER and EMAIL_PASSWORD in Render Environment.');
     }
 }
 
